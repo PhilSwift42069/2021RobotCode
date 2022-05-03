@@ -84,12 +84,13 @@ public class Robot extends TimedRobot {
   private final int RIGHT_DRIVE_FRONT = 13;
   private final int LEFT_DRIVE_BACK = 2;
   private final int LEFT_DRIVE_FRONT = 3;
+//////////////////////////////////////////////
+//Joystick Axis
 
-  //JoyStickAxis
+  //Joystick
   private final int FOREWARD_BACKWARD_AXIS = 1;
   private final int LEFT_RIGHT_AXIS = 2;
-  private final int DRIVING_SPEED = 3;
-  
+  private final int DRIVING_SPEED = 3;  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -159,7 +160,7 @@ public class Robot extends TimedRobot {
   //DEFINE DRIVE CODE
   private void drive(){//drives the robot
     double topSpeed = 1;
-    System.out.println(joystick.getRawAxis(DRIVING_SPEED));
+    //joystick drive
     chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS) * 0.5); 
   }
 

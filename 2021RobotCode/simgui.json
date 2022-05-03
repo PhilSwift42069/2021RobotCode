@@ -1,0 +1,37 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[13]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[13]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[2]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[2]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive"
+    }
+  }
+}
