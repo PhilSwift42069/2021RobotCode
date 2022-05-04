@@ -161,7 +161,7 @@ public class Robot extends TimedRobot {
   private void drive(){//drives the robot
     double topSpeed = 1;
     //joystick drive
-    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS) * 0.5); 
+    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS) * 0.75); 
   }
 
   /** This function is called once when teleop is enabled. */
