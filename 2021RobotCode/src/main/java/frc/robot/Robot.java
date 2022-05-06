@@ -80,6 +80,10 @@ public class Robot extends TimedRobot {
   private WPI_TalonSRX turret;
   private MotorControllerGroup shooter;
 
+  /*hopper*/
+  private WPI_TalonSRX hopperStage1;
+  private WPI_TalonSRX hopperStage2;
+
   /////////////////////////
 
   //motor groups
@@ -95,6 +99,10 @@ public class Robot extends TimedRobot {
   private final int LEFT_DRIVE_BACK = 2;
   private final int LEFT_DRIVE_FRONT = 3;
   private final int TURRET = 14;
+  private final int SHOOTER_LEFT = 0;
+  private final int SHOOTER_RIGHT = 15;
+  private final int INTAKE_STAGE_1 = 6;
+  private final int INTAKE_STAGE_2 = 5;
 //////////////////////////////////////////////
 //Joystick Axis
 
@@ -109,7 +117,8 @@ public class Robot extends TimedRobot {
   /*XBOX*/
   private final int TURRET_AIM = 4;
 
-  private final int CLIMBER_ANGLE_AXIS = 1;
+  private final int LEFT_STICK_FOREWARD_BACKWARD = 1;
+  private final int LEFT_STICK_LEFT_RIGHT = 0;
 
   private final int A = 1;
   private final int B = 2;
@@ -152,9 +161,77 @@ public class Robot extends TimedRobot {
     rsideDrive = new MotorControllerGroup(rightDrive[0], rightDrive[1]);
     chassis = new DifferentialDrive(lsideDrive, rsideDrive);
     
-    /*turret*/
+    /*shooter*/
     turret = new WPI_TalonSRX(TURRET);
+    shooterLeft = new WPI_TalonFX(SHOOTER_LEFT);
+    shooterRight = new WPI_TalonFX(SHOOTER_RIGHT);
+    shooterLeft.setInverted(true);
+    shooterLeft.config_kP(0, 0.15);
+    shooterRight.config_kP(0, 0.15);
+    shooterLeft.config_kF(0, 0.05);
+    shooterRight.config_kF(0, 0.05);
+    shooter = new MotorControllerGroup(shooterLeft, shooterRight);
+
+    /*intake*/
+    //intake = new 
+
+    /*hopper*/
+    hopperStage1 = new WPI_TalonSRX(INTAKE_STAGE_1);
+    hopperStage2 = new WPI_TalonSRX(INTAKE_STAGE_2);
+
     ///////////////////////////////////////
+  }
+
+  /*FUNCTION DEFINITIONS*/
+
+  private double rpmToFalcon(double rpm){
+    return (rpm*2048.0)/600.0;
+  }
+
+  //DEFINE DRIVE CODE
+  private void drive(){//drives the robot
+    double topSpeed = 1;
+    //joystick drive
+    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS)*0.5); 
+    //xbox drive
+    //chassis.arcadeDrive(-joystick.getRawAxis(LEFT_STICK_FOREWARD_BACKWARD)*topSpeed, joystick.getRawAxis(LEFT_STICK_LEFT_RIGHT)*0.5);
+  }
+  
+  //turret aim control
+  private void aimTurret() {
+    if (!(xbox.getRawAxis(TURRET_AIM) == 0)){
+      double speed = xbox.getRawAxis(TURRET_AIM) * 0.3;
+      turret.set(speed);
+    }
+    else {
+      turret.stopMotor();
+    }
+  }
+
+  //shooter control
+  private void shooterControl() {
+    double targetRPM = 2000;
+    if (joystick.getRawButton(TRIGGER)){
+      shooterLeft.set(ControlMode.Velocity, rpmToFalcon(targetRPM));
+      shooterRight.set(ControlMode.Velocity, rpmToFalcon(targetRPM));
+    }
+    else{
+      shooterLeft.stopMotor();
+      shooterRight.stopMotor();
+    }
+  }
+
+  //hopper control
+  private void hopperControl() {
+    double hopperSpeed = 0.2;
+    if (xbox.getRawButton(A)) {
+      hopperStage1.set(hopperSpeed);
+      hopperStage2.set(hopperSpeed);
+    }
+    else {
+      hopperStage1.stopMotor();
+      hopperStage2.stopMotor();
+    }
   }
 
   /**
@@ -190,14 +267,6 @@ public class Robot extends TimedRobot {
    
   }
 
-  //ROBOT CONTROL METHODS (USER DEFINED)
-  //DEFINE DRIVE CODE
-  private void drive(){//drives the robot
-    double topSpeed = 1;
-    //joystick drive
-    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS)*0.5); 
-  }
-
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
@@ -216,18 +285,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive();
     aimTurret();
+    shooterControl();
   }
 
-  //turret aim control
-  private void aimTurret() {
-    if (!(xbox.getRawAxis(TURRET_AIM) == 0)){
-      double speed = xbox.getRawAxis(TURRET_AIM) * 0.3;
-      turret.set(speed);
-    }
-    else {
-      turret.stopMotor();
-    }
-  }
+
 
   /** This function is called once when the robot is disabled. */
   @Override
