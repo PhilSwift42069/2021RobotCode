@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+//This code was made to practice coding
+//It will sorta run the 2021 robot. THIS IS NOT THE ACTUAL CODE
+
 
 //////////////////////////
 /*imports*/
@@ -65,10 +68,17 @@ public class Robot extends TimedRobot {
 
   //Controllers
   private Joystick joystick;
+  private Joystick xbox;
 
   /*drive motors*/
   private WPI_TalonFX[] leftDrive = new WPI_TalonFX[2];
   private WPI_TalonFX[] rightDrive = new WPI_TalonFX[2];
+
+  /*shooter*/
+  private WPI_TalonFX shooterLeft;
+  private WPI_TalonFX shooterRight;
+  private WPI_TalonSRX turret;
+  private MotorControllerGroup shooter;
 
   /////////////////////////
 
@@ -84,13 +94,33 @@ public class Robot extends TimedRobot {
   private final int RIGHT_DRIVE_FRONT = 13;
   private final int LEFT_DRIVE_BACK = 2;
   private final int LEFT_DRIVE_FRONT = 3;
+  private final int TURRET = 14;
 //////////////////////////////////////////////
 //Joystick Axis
 
-  //Joystick
+  /*joystick*/
   private final int FOREWARD_BACKWARD_AXIS = 1;
   private final int LEFT_RIGHT_AXIS = 2;
-  private final int DRIVING_SPEED = 3;  
+  private final int DRIVING_SPEED = 3;
+  private final int TRIGGER = 1;
+  private final int THUMB_BUTTON = 2;
+  private final int CAMERA_TOGGLE = 3;
+  
+  /*XBOX*/
+  private final int TURRET_AIM = 4;
+
+  private final int CLIMBER_ANGLE_AXIS = 1;
+
+  private final int A = 1;
+  private final int B = 2;
+  private final int X = 3;
+  private final int Y = 4;
+
+  private final int LEFT_BUMPER = 5;
+  private final int RIGHT_BUMPER = 6;
+
+  private final int LEFT_TRIGGER = 2;
+  private final int RIGHT_TRIGGER = 3;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -105,6 +135,7 @@ public class Robot extends TimedRobot {
     //initiate variables
     /*controllers*/
     joystick = new Joystick(0);
+    xbox = new Joystick(1);
 
     /*drivetrain*/
     leftDrive[0] = new WPI_TalonFX(LEFT_DRIVE_BACK);
@@ -120,6 +151,9 @@ public class Robot extends TimedRobot {
     lsideDrive = new MotorControllerGroup(leftDrive[0], leftDrive[1]);
     rsideDrive = new MotorControllerGroup(rightDrive[0], rightDrive[1]);
     chassis = new DifferentialDrive(lsideDrive, rsideDrive);
+    
+    /*turret*/
+    turret = new WPI_TalonSRX(TURRET);
     ///////////////////////////////////////
   }
 
@@ -161,7 +195,7 @@ public class Robot extends TimedRobot {
   private void drive(){//drives the robot
     double topSpeed = 1;
     //joystick drive
-    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS)*joystick.getRawAxis(LEFT_RIGHT_AXIS)); 
+    chassis.arcadeDrive(-joystick.getRawAxis(FOREWARD_BACKWARD_AXIS) * topSpeed, joystick.getRawAxis(LEFT_RIGHT_AXIS)*0.5); 
   }
 
   /** This function is called once when teleop is enabled. */
@@ -181,6 +215,18 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive();
+    aimTurret();
+  }
+
+  //turret aim control
+  private void aimTurret() {
+    if (!(xbox.getRawAxis(TURRET_AIM) == 0)){
+      double speed = xbox.getRawAxis(TURRET_AIM) * 0.3;
+      turret.set(speed);
+    }
+    else {
+      turret.stopMotor();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
