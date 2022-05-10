@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
   /*joystick*/
   private final int FOREWARD_BACKWARD_AXIS = 1;
   private final int LEFT_RIGHT_AXIS = 2;
-  private final int DRIVING_SPEED = 3;
+  private final int SHOOTING_SPEED = 3;
   private final int TRIGGER = 1;
   private final int THUMB_BUTTON = 2;
   private final int CAMERA_TOGGLE = 3;
@@ -221,10 +221,10 @@ public class Robot extends TimedRobot {
 
   //shooter control
   private void shooterControl() {
-    double targetSpeed = 1;
+    double shootingSpeed = ((joystick.getRawAxis(SHOOTING_SPEED)+1)*0.5);
     if (joystick.getRawButton(TRIGGER)){
-      shooterLeft.set(targetSpeed);
-      shooterRight.set(targetSpeed);
+      shooterLeft.set(shootingSpeed);
+      shooterRight.set(shootingSpeed);
     }
     else{
       shooterLeft.stopMotor();
@@ -241,6 +241,12 @@ public class Robot extends TimedRobot {
       turretIntakeLeft.set(1);
       turretIntakeRight.set(1);
     }
+    else if (xbox.getRawButton(B)) {
+      hopperStage1.set(-hopperSpeed);
+      hopperStage2.set(-hopperSpeed);
+      turretIntakeLeft.set(-1);
+      turretIntakeRight.set(-1);
+    }
     else {
       hopperStage1.stopMotor();
       hopperStage2.stopMotor();
@@ -252,7 +258,10 @@ public class Robot extends TimedRobot {
   //intake control
   private void intakeControl() {
     if (xbox.getRawButton(A)) {
-      
+      intake.set(1);
+    }
+    else if (xbox.getRawButton(RIGHT_TRIGGER)) {
+      intake.set(1);
     }
   }
 
