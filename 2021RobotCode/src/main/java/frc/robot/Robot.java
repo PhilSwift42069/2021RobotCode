@@ -263,6 +263,7 @@ public class Robot extends TimedRobot {
     else if (xbox.getRawButton(RIGHT_TRIGGER)) {
       intake.set(1);
     }
+    else intake.stopMotor();
   }
 
   /**
