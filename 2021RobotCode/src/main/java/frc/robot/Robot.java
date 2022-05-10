@@ -77,12 +77,17 @@ public class Robot extends TimedRobot {
   /*shooter*/
   private WPI_TalonFX shooterLeft;
   private WPI_TalonFX shooterRight;
+  private WPI_TalonSRX turretIntakeLeft;
+  private WPI_TalonSRX turretIntakeRight;
   private WPI_TalonSRX turret;
   private MotorControllerGroup shooter;
 
   /*hopper*/
   private WPI_TalonSRX hopperStage1;
   private WPI_TalonSRX hopperStage2;
+
+  /*intake*/
+  private WPI_TalonSRX intake;
 
   /////////////////////////
 
@@ -101,8 +106,11 @@ public class Robot extends TimedRobot {
   private final int TURRET = 14;
   private final int SHOOTER_LEFT = 0;
   private final int SHOOTER_RIGHT = 15;
-  private final int INTAKE_STAGE_1 = 6;
-  private final int INTAKE_STAGE_2 = 5;
+  private final int HOPPER_STAGE_1 = 6;
+  private final int HOPPER_STAGE_2 = 5;
+  private final int TURRET_INTAKE_LEFT = 4;
+  private final int TURRET_INTAKE_RIGHT = 11;
+  private final int INTAKE = 1;
 //////////////////////////////////////////////
 //Joystick Axis
 
@@ -171,13 +179,16 @@ public class Robot extends TimedRobot {
     shooterLeft.config_kF(0, 0.05);
     shooterRight.config_kF(0, 0.05);
     shooter = new MotorControllerGroup(shooterLeft, shooterRight);
+    turretIntakeLeft = new WPI_TalonSRX(TURRET_INTAKE_LEFT);
+    turretIntakeRight = new WPI_TalonSRX(TURRET_INTAKE_RIGHT);
 
     /*intake*/
     //intake = new 
 
     /*hopper*/
-    hopperStage1 = new WPI_TalonSRX(INTAKE_STAGE_1);
-    hopperStage2 = new WPI_TalonSRX(INTAKE_STAGE_2);
+    hopperStage1 = new WPI_TalonSRX(HOPPER_STAGE_1);
+    hopperStage2 = new WPI_TalonSRX(HOPPER_STAGE_2);
+    hopperStage1.setInverted(true);
 
     ///////////////////////////////////////
   }
@@ -210,10 +221,10 @@ public class Robot extends TimedRobot {
 
   //shooter control
   private void shooterControl() {
-    double targetRPM = 2000;
+    double targetSpeed = 1;
     if (joystick.getRawButton(TRIGGER)){
-      shooterLeft.set(ControlMode.Velocity, rpmToFalcon(targetRPM));
-      shooterRight.set(ControlMode.Velocity, rpmToFalcon(targetRPM));
+      shooterLeft.set(targetSpeed);
+      shooterRight.set(targetSpeed);
     }
     else{
       shooterLeft.stopMotor();
@@ -227,10 +238,21 @@ public class Robot extends TimedRobot {
     if (xbox.getRawButton(A)) {
       hopperStage1.set(hopperSpeed);
       hopperStage2.set(hopperSpeed);
+      turretIntakeLeft.set(1);
+      turretIntakeRight.set(1);
     }
     else {
       hopperStage1.stopMotor();
       hopperStage2.stopMotor();
+      turretIntakeLeft.stopMotor();
+      turretIntakeRight.stopMotor();
+    }
+  }
+
+  //intake control
+  private void intakeControl() {
+    if (xbox.getRawButton(A)) {
+      
     }
   }
 
@@ -283,9 +305,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drive();
+    //drive();
     aimTurret();
     shooterControl();
+    hopperControl();
   }
 
 
