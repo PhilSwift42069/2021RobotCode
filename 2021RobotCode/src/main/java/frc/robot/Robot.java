@@ -20,11 +20,13 @@ https://www.kauailabs.com/dist/frc/2022/navx_frc.json
 //default
 package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.util.*;
+
 
 //motors
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -35,9 +37,22 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 
 //controllers
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
+
+//sensors
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 
 //encoders
 import com.ctre.phoenix.sensors.CANCoder;
@@ -46,8 +61,31 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
+//solenoid
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
+
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+
+
+//auto
+import edu.wpi.first.math.trajectory.*;
+import edu.wpi.first.math.trajectory.Trajectory.State;
+
+
 //camera
 import edu.wpi.first.cameraserver.CameraServer;
+
+//gyro
+import com.kauailabs.navx.*;
+import com.kauailabs.navx.AHRSProtocol;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SPI;
 
 //other
 import java.io.IOException;
