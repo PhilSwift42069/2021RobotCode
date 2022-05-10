@@ -147,7 +147,9 @@ public class Robot extends TimedRobot {
   private final int TURRET_INTAKE_LEFT = 4;
   private final int TURRET_INTAKE_RIGHT = 11;
   private final int INTAKE = 1;
+
 //////////////////////////////////////////////
+
 //Joystick Axis
 
   /*joystick*/
