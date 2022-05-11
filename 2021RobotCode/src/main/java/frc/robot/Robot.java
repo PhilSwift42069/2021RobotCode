@@ -259,7 +259,8 @@ public class Robot extends TimedRobot {
 
   //shooter control
   private void shooterControl() {
-    double shootingSpeed = ((joystick.getRawAxis(SHOOTING_SPEED)+1)*0.5);
+    double shootingSpeed = ((joystick.getRawAxis(SHOOTING_SPEED)*(-1)+1)*0.5);
+    System.out.println(shootingSpeed);
     if (joystick.getRawButton(TRIGGER)){
       shooterLeft.set(shootingSpeed);
       shooterRight.set(shootingSpeed);
@@ -276,14 +277,14 @@ public class Robot extends TimedRobot {
     if (xbox.getRawButton(A)) {
       hopperStage1.set(hopperSpeed);
       hopperStage2.set(hopperSpeed);
-      turretIntakeLeft.set(1);
-      turretIntakeRight.set(1);
+      turretIntakeLeft.set(0.3);
+      turretIntakeRight.set(0.3);
     }
     else if (xbox.getRawButton(B)) {
       hopperStage1.set(-hopperSpeed);
       hopperStage2.set(-hopperSpeed);
-      turretIntakeLeft.set(-1);
-      turretIntakeRight.set(-1);
+      turretIntakeLeft.set(-0.3);
+      turretIntakeRight.set(-0.3);
     }
     else {
       hopperStage1.stopMotor();
@@ -353,7 +354,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //drive();
+    drive();
     aimTurret();
     shooterControl();
     hopperControl();
